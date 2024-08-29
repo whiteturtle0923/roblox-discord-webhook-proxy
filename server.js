@@ -1,47 +1,4 @@
-const cmd = require('node-cmd');
-const crypto = require('crypto'); 
-const bodyParser = require('body-parser');
-const express = require('express');
-const app = express();
-app.use(express.static('public'));
-app.use(bodyParser.json());
-
-app.get('/', function(request, response) {
-  response.sendFile(__dirname + '/views/index.html');
-});
-
-const listener = app.listen(process.env.PORT, function() {
-  console.log('Your app is listening on port ' + listener.address().port);
-});
-
-const onWebhook = (req, res) => {
-  let hmac = crypto.createHmac('sha1', process.env.SECRET);
-  let sig  = `sha1=${hmac.update(JSON.stringify(req.body)).digest('hex')}`;
-
-  if (req.headers['x-github-event'] === 'push' && sig === req.headers['x-hub-signature']) {
-    cmd.run('chmod 777 ./git.sh'); 
-    
-    cmd.get('./git.sh', (err, data) => {  
-      if (data) {
-        console.log(data);
-      }
-      if (err) {
-        console.log(err);
-      }
-    })
-
-    cmd.run('refresh');
-  }
-
-  return res.sendStatus(200);
-}
-
-app.post('/git', onWebhook);
-
-
-
-//actual code
-/*const http = require('http');
+const http = require('http');
 
 const server = http.createServer((req, res) => {
   if (req.method === 'POST') {
@@ -93,4 +50,4 @@ server.listen(3000, () => {
 
 const test = {"date":"Tue, 27 Aug 2024 19:25:25 GMT","content-type":"text/plain; charset=UTF-8","content-length":"16","connection":"close","retry-after":"18629","x-frame-options":"SAMEORIGIN","referrer-policy":"same-origin","cache-control":"private, max-age=0, no-store, no-cache, must-revalidate, post-check=0, pre-check=0","expires":"Thu, 01 Jan 1970 00:00:01 GMT","report-to":"{\"endpoints\":[{\"url\":\"https:\\/\\/a.nel.cloudflare.com\\/report\\/v4?s=ykcj5ySMK%2FJzh3MJP2gUrgYkMxhfzSHzmYxe5GNuvbBMW%2BWmufmfF6Zd3qu1UZhScPqG7zWYP2%2BywdVuMK20YXknDgzBTNnMQdYfTL8bVoz942b56vV9ZKwS6GGr\"}],\"group\":\"cf-nel\",\"max_age\":604800}","nel":"{\"success_fraction\":0,\"report_to\":\"cf-nel\",\"max_age\":604800}","x-content-type-options":"nosniff","content-security-policy":"frame-ancestors 'none'; default-src 'none'","set-cookie":["_cfuvid=4_qZic8DJQa_czVk_MFb5clmlLCIlhP.Qb.L2T6kPh0-1724786725012-0.0.1.1-604800000; path=/; domain=.discord.com; HttpOnly"],"server":"cloudflare","cf-ray":"8b9e7287385f0610-IAD","alt-svc":"h3=\":443\"; ma=86400"};
 
-console.log(`Retry after: ${test["retry-after"]} seconds`);*/
+console.log(`Retry after: ${test["retry-after"]} seconds`);
