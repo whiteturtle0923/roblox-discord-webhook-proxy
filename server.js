@@ -1,13 +1,14 @@
 const http = require('http');
 
-const server = http.createServer((req, res) => {
-  if (req.method === 'POST') {
+const server = http.createServer((request, response) => {
+  if (request.method === 'POST') {
     let data = '';
-    req.on('data', chunk => {
+    request.on('data', chunk => {
+      console.log(chunk)
       data += chunk.toString();
     });
-    req.on('end', () => {
-      const options = {
+    request.on('end', () => {
+      /*const options = {
         hostname: 'discord.com',
         path: '/api/webhooks/1170849711272513666/IzpaIDF9b1Y2_0nVd1DUdnaO8FcEJ2zJVSOytvMUK7YVPVSbsvCM0NPkXxGDaX5SrIMp',
         method: 'POST',
@@ -35,12 +36,12 @@ const server = http.createServer((req, res) => {
 
       // Write data to request body
       //request.write(data);
-      //request.end();
+      //request.end();*/
       console.log('POST data:', data);
-      res.end(data);
+      response.end(data);
     });
   } else {
-    res.end('Send a POST request to this endpoint');
+    response.end('Send a POST request to this endpoint');
   }
 });
 
