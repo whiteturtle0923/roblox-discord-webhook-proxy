@@ -1,13 +1,12 @@
 const http = require('http');
 
-const server = http.createServer((request, response) => {
-  if (request.method === 'POST') {
+const server = http.createServer((receivedrequest, sentresponse) => {
+  if (receivedrequest.method === 'POST') {
     let data = '';
-    request.on('data', chunk => {
-      console.log(chunk)
+    receivedrequest.on('data', chunk => {
       data += chunk.toString();
     });
-    request.on('end', () => {
+    receivedrequest.on('end', () => {
       /*const options = {
         hostname: 'discord.com',
         path: '/api/webhooks/1170849711272513666/IzpaIDF9b1Y2_0nVd1DUdnaO8FcEJ2zJVSOytvMUK7YVPVSbsvCM0NPkXxGDaX5SrIMp',
@@ -17,31 +16,31 @@ const server = http.createServer((request, response) => {
           'Content-Length': Buffer.byteLength(data),
         },
       };
-      const request = http.request(options, (res) => {
-        console.log(`STATUS: ${res.statusCode}`);
-        console.log(`HEADERS: ${JSON.stringify(res.headers)}`);
-        console.log(res.headers);
-        console.log(`Retry after: ${res.headers["retry-after"]} seconds`)
-        res.setEncoding('utf8');
-        res.on('data', (chunk) => {
+      const sentrequest = http.request(options, (receivedresponse) => {
+        console.log(`STATUS: ${receivedresponse.statusCode}`);
+        console.log(`HEADERS: ${JSON.stringify(receivedresponse.headers)}`);
+        console.log(receivedresponse.headers);
+        console.log(`Retry after: ${receivedresponse.headers["retry-after"]} seconds`)
+        receivedresponse.setEncoding('utf8');
+        receivedresponse.on('data', (chunk) => {
           console.log(`BODY: ${chunk}`);
         });
-        res.on('end', () => {
+        receivedresponse.on('end', () => {
           console.log('No more data in response.');
         });
       });
-      request.on('error', (e) => {
+      sentrequest.on('error', (e) => {
         console.error(`problem with request: ${e.message}`);
       });
 
       // Write data to request body
-      //request.write(data);
-      //request.end();*/
+      //sentrequest.write(data);
+      //sentrequest.end();*/
       console.log('POST data:', data);
-      response.end(data);
+      sentresponse.end(data);
     });
   } else {
-    response.end('Send a POST request to this endpoint');
+    sentresponse.end('Send a POST request to this endpoint');
   }
 });
 
