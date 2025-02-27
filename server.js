@@ -9,7 +9,7 @@ const server = http.createServer((receivedrequest, sentresponse) => {
     receivedrequest.on('end', () => {
       /*const options = {
         hostname: 'discord.com',
-        path: '/api/webhooks/1170849711272513666/IzpaIDF9b1Y2_0nVd1DUdnaO8FcEJ2zJVSOytvMUK7YVPVSbsvCM0NPkXxGDaX5SrIMp',
+        path: '', 
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
